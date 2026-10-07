@@ -1,0 +1,31 @@
+name: Ryuma Build V2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile
+        shell: bash
+        run: |
+          set -e
+          xcrun --sdk iphoneos clang \
+            -arch arm64 \
+            -dynamiclib \
+            -fobjc-arc \
+            -miphoneos-version-min=14.0 \
+            -framework UIKit \
+            -framework Foundation \
+            -o RyumaGradient.dylib \
+            RyumaGradient.m
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: RyumaGradient-V2
+          path: RyumaGradient.dylib
